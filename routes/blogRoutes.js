@@ -1,14 +1,16 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const {postBlog , getPostBlog, searchPostBlogs } = require('../controller/blogController')
+const {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs } = require('../controller/blogController')
 
 
-router.get('/', getPostBlog);
+router.get('/', getPostBlogs);
 
 router.get('/search/:word', searchPostBlogs)
 
-router.post('/postblogs', postBlog);
+router.post('/postblogs', postBlogs);
+
+router.patch('/postblogs/:id', updatePostBlogs)
 
 
 
