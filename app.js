@@ -4,7 +4,6 @@ require('dotenv').config();
 const cors = require('cors');
 const blogRoutes = require('./routes/blogRoutes');
 const mongoose = require('mongoose');
-const { connect } = require('http2');
 
 
 //DB
