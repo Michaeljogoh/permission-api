@@ -47,7 +47,6 @@ const passport = require('passport');
    }
 
 //    Login 
-
 const loginUsers = (req , res , next)  =>{
         passport.authenticate('local', {
             successRedirect:"/",
@@ -56,6 +55,12 @@ const loginUsers = (req , res , next)  =>{
         })
         next();
 
+}
+
+// Logout
+const logoutUsers = (req,res)=>{
+    req.logout();
+    res.redirect('/login');
 }
 
 
@@ -108,4 +113,4 @@ const updatePostBlogs = async (req , res ) =>{
 
 
 
-module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers}
+module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers , logoutUsers}
