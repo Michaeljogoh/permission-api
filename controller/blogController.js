@@ -1,15 +1,16 @@
 const BlogPost = require('../models/blogModel');
 const Users = require('../models/Users');
-const bcrypt  = require('bcryptjs')
+const bcrypt  = require('bcryptjs');
+const passport = require('passport');
 
 
 
 // Register User
  const registerUsers = (req, res) =>{
-    const {firstname , lastname , email ,password , password2 , date} = req.body
+    const {name , email ,password , password2 , date} = req.body
     let errors = []
     // validation
-    if(!firstname || !lastname || !email || !password || !password2){
+    if(!name || !email || !password || !password2){
      errors.push({msg: "Please fill in all fields"})
     }
     // if password is not match
@@ -23,7 +24,7 @@ const bcrypt  = require('bcryptjs')
 
     // render form if no error caught
     if(errors < 0){
-        res.render({errors , firstname , lastname , email , password , password2})
+        res.render({errors , name, email , password , password2})
     }  else {
 
     Users.findOne({email:email})
@@ -31,7 +32,7 @@ const bcrypt  = require('bcryptjs')
          if(user){
             errors.push({msg: "Email already exist"})
          } else {
-    const newUser = new Users({firstname , lastname , email , password})
+    const newUser = new Users({name , email , password})
             //  hash password
     bcrypt.genSalt(salt, (err, salt)=>{
       bcrypt.hash(newUser.password, salt, (hash)=>{
@@ -43,8 +44,19 @@ const bcrypt  = require('bcryptjs')
          }
     })
     }
-   
- }
+   }
+
+//    Login 
+
+const loginUsers = (req , res , next)  =>{
+        passport.authenticate('local', {
+            successRedirect:"/",
+            failureRedirect:"/login",
+            failureFlash:true
+        })
+        next();
+
+}
 
 
 // post 
@@ -82,7 +94,7 @@ const search = await BlogPost.countDocuments();
 // update
 const updatePostBlogs = async (req , res ) =>{
     const {title , content , author} = req.body;
-    if (req.body.author !== req.body.author) {
+    if (req.body.author !== author) {
         res.status(404).send('Not Found')
     } else {
         await BlogPost.findByIdAndUpdate(req.params.id, {title , content , author});
@@ -96,4 +108,4 @@ const updatePostBlogs = async (req , res ) =>{
 
 
 
-module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers}
+module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers}
