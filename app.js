@@ -4,6 +4,8 @@ require('dotenv').config();
 const cors = require('cors');
 const blogRoutes = require('./routes/blogRoutes');
 const mongoose = require('mongoose');
+const passport  = require('passport');
+require('./config/passport')(passport);
 
 
 //DB
@@ -12,8 +14,15 @@ mongoose.connect(process.env.blog_DB , {useNewUrlParser: true , useUnifiedTopolo
 .catch(err => console.log(err));
 
 
+
+// passport
+app.use(passport.initialize());
+
+// cross origin
 app.use(cors());
+// bodyparser
 app.use(express.json());
+// form-encoded extension
 app.use(express.urlencoded({extended:true}));
 
 // Routes

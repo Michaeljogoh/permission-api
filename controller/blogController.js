@@ -1,6 +1,6 @@
 const BlogPost = require('../models/blogModel');
 const Users = require('../models/Users');
-const bcrypt  = require('bcryptjs');
+const bcrypt  = require('bcrypt');
 const passport = require('passport');
 
 
