@@ -5,9 +5,7 @@ const {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs , registerUser
 const { ensureAuthenticated } = require('../config/auth')
 
 
-router.get('/register', (req , res ) =>{
-    res.render("register")
-})
+
 
 router.get('/', getPostBlogs);
 

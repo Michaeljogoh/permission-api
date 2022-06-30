@@ -8,10 +8,10 @@ const passport = require('passport');
 
 // Register User
  const registerUsers = (req, res) =>{
-    const {name , email ,password , password2 , date} = req.body
+    const {firstname, lastname , username, email , password , password2 , date} = req.body
     let errors = []
     // validation
-    if(!name || !email || !password || !password2){
+    if(!firstname || !lastname|| !username || !email || !password || !password2){
      errors.push({msg: "Please fill in all fields"})
     }
     // if password is not match
@@ -25,7 +25,7 @@ const passport = require('passport');
 
     // render form if no error caught
     if(errors < 0){
-        res.render({errors , name, email , password , password2})
+        res.render({errors , firstname , lastname, username , email , password , password2})
     }  else {
 
     Users.findOne({email:email})
@@ -34,8 +34,7 @@ const passport = require('passport');
             errors.push({msg: "Email already exist"})
          } else {
 
-
-    const newUser = new Users({name , email , password})
+    const newUser = new Users({firstname, lastname ,  username , email ,  password})
             //  hash password
      bcrypt.genSalt(10, ( err , salt)=>
          bcrypt.hash(newUser.password, salt, (err,hash)=>{
@@ -46,7 +45,7 @@ const passport = require('passport');
                 //save user
 
                 newUser.save();
-                res.status(200).send("Registerd");
+                res.status(200).send("Registered");
               
         }))
     
@@ -108,8 +107,8 @@ const search = await BlogPost.countDocuments();
 
 // update
 const updatePostBlogs = async (req , res ) =>{
-    const {title , content , author} = req.body;
-    if (req.body.author !== author) {
+    const {title , content , author } = req.body;
+    if (author !== author) {
         res.status(404).send('Not Found')
     } else {
         await BlogPost.findByIdAndUpdate(req.params.id, {title , content , author});
@@ -121,9 +120,14 @@ const updatePostBlogs = async (req , res ) =>{
 
 const deletePostBlogs = async (req , res) =>{
     const {title , content , author } = req.body;
-    await BlogPost.findByIdAndDelete(req.params.id, {title , content , author});
-    res.status(200).send("Deleted!!!")
-}
+    if(author !== author ){
+        res.status(400).send('Can not delete the post')
+    } else {
+        await BlogPost.findByIdAndDelete(req.params.id, {title , content , author});
+        res.status(200).send("Deleted!!!")
+    }
+    }
+    
 
 
 

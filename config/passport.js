@@ -6,12 +6,12 @@ const Users = require('../models/Users');
 
 module.exports = (passport) =>{ 
     passport.use(
-        new LocalStrategy({usernameField: 'email'}, (email, password, done)=>{
+        new LocalStrategy({usernameField: 'username'}, (username, password, done)=>{
             //match user
-            Users.findOne({email:email})
+            Users.findOne({username:username})
             .then(user =>{
                 if(!user){
-                  return done (null , false , {message:"Email is registerd"})
+                  return done (null , false , {message:"Username is registerd"})
                 }
                 // match password
                 bcrypt.compare(password, user.password, (err , isMatch)=>{
