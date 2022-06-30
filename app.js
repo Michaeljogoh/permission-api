@@ -6,6 +6,7 @@ const blogRoutes = require('./routes/blogRoutes');
 const mongoose = require('mongoose');
 const passport  = require('passport');
 require('./config/passport')(passport);
+const session = require('express-session');
 
 
 //DB
@@ -14,9 +15,21 @@ mongoose.connect(process.env.blog_DB , {useNewUrlParser: true , useUnifiedTopolo
 .catch(err => console.log(err));
 
 
+// session 
+
+app.use(session({
+    secret:"secret",
+    resave:true,
+    saveUninitialized: true
+}));
+
+
 
 // passport
 app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 // cross origin
 app.use(cors());

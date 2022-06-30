@@ -2,6 +2,7 @@ const BlogPost = require('../models/blogModel');
 const Users = require('../models/Users');
 const bcrypt  = require('bcrypt');
 const passport = require('passport');
+const { baseModelName } = require('../models/Users');
 
 
 
@@ -87,7 +88,7 @@ res.json({getPosts, totalPages:Math.ceil(count / limit), currentPage: page})
 // search
 const searchPostBlogs =  async (req , res)=>{
     const {page = 1, limit = 5} = req.query;
-    const searchPosts = await BlogPost.find({'$or':[{title:{$regex:req.params.word.toLowerCase()}}]})
+    const searchPosts = await BlogPost.find({'$options':[{title:{$regex:req.params.word}}]})
     .limit(limit * 1)
     .skip((page - 1 ) * limit)
     .exec();
@@ -109,8 +110,14 @@ const updatePostBlogs = async (req , res ) =>{
  
 }
 
+const deletePostBlogs = async (req , res) =>{
+    const {title , content , author } = req.body;
+    await BlogPost.findByIdAndDelete(req.params.id, {title , content , author});
+    res.status(200).send("Deleted!!!")
+}
 
 
 
 
-module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers , logoutUsers}
+
+module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers , logoutUsers, deletePostBlogs}
