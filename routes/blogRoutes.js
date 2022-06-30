@@ -2,7 +2,12 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs , registerUsers , loginUsers , logoutUsers, deletePostBlogs} = require('../controller/blogController')
+const { ensureAuthenticated } = require('../config/auth')
 
+
+router.get('/register', (req , res ) =>{
+    res.render("register")
+})
 
 router.get('/', getPostBlogs);
 
@@ -14,11 +19,11 @@ router.post('/login', loginUsers);
 
 router.get('/logout', logoutUsers);
 
-router.post('/postblogs', postBlogs);
+router.post('/postblogs', ensureAuthenticated, postBlogs);
 
-router.patch('/postblogs/:id', updatePostBlogs);
+router.patch('/postblogs/:id', ensureAuthenticated, updatePostBlogs);
 
-router.delete('/postblogs/:id', deletePostBlogs)
+router.delete('/postblogs/:id', ensureAuthenticated, deletePostBlogs)
 
 
 

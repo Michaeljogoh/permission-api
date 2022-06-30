@@ -2,7 +2,7 @@ const BlogPost = require('../models/blogModel');
 const Users = require('../models/Users');
 const bcrypt  = require('bcrypt');
 const passport = require('passport');
-const { baseModelName } = require('../models/Users');
+
 
 
 
@@ -33,19 +33,28 @@ const { baseModelName } = require('../models/Users');
          if(user){
             errors.push({msg: "Email already exist"})
          } else {
+
+
     const newUser = new Users({name , email , password})
             //  hash password
-    bcrypt.genSalt(salt, (err, salt)=>{
-      bcrypt.hash(newUser.password, salt, (hash)=>{
-            newUser.password = hash;
-            // Save
-            newUser.save();
-                })
-            })
-         }
-    })
+     bcrypt.genSalt(10, ( err , salt)=>
+         bcrypt.hash(newUser.password, salt, (err,hash)=>{
+                if(err) throw err;
+             
+                newUser.password = hash;
+                
+                //save user
+
+                newUser.save();
+                res.status(200).send("Registerd");
+              
+        }))
+    
+  
     }
-   }
+   })
+}
+ }
 
 //    Login 
 const loginUsers = (req , res , next)  =>{
