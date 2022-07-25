@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node app.js",
-    "start": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
@@ -20,9 +20,11 @@
     "express": "^4.18.1",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.1",
     "nodemon": "^2.0.18",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "uninstall": "^0.0.0"
   }
 }

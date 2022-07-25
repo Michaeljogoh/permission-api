@@ -1,76 +1,81 @@
 const BlogPost = require('../models/blogModel');
 const Users = require('../models/Users');
 const bcrypt  = require('bcrypt');
-const passport = require('passport');
+const jwt = require('jsonwebtoken')
 
 
 
 
-// Register User
- const registerUsers = (req, res) =>{
-    const {firstname, lastname , username, email , password , password2 , date} = req.body
-    let errors = []
-    // validation
-    if(!firstname || !lastname|| !username || !email || !password || !password2){
-     errors.push({msg: "Please fill in all fields"})
-    }
-    // if password is not match
-    if(password !== password2){
-     errors.push({msg: "Password does not match"})
-    }
-    // password must be six characters
-    if(password < 6){
-     errors.push({msg: "Password must not be less than six characters"})
-    }
 
-    // render form if no error caught
-    if(errors < 0){
-        res.render({errors , firstname , lastname, username , email , password , password2})
-    }  else {
-
-    Users.findOne({email:email})
-    .then(user =>{
-         if(user){
-            errors.push({msg: "Email already exist"})
-         } else {
-
-    const newUser = new Users({firstname, lastname ,  username , email ,  password})
-            //  hash password
-     bcrypt.genSalt(10, ( err , salt)=>
-         bcrypt.hash(newUser.password, salt, (err,hash)=>{
-                if(err) throw err;
-             
-                newUser.password = hash;
-                
-                //save user
-
-                newUser.save();
-                res.status(200).send("Registered");
-              
-        }))
+// Sign Up
+const registerUsers = async (req , res)  =>{
+    const {firstname, lastname,  email , username , password , password2 } = req.body;
+        //Validation
+        if(!firstname ||!lastname|| !email || !username || !password || !password2 ){
+            res.status(204).json({error:"Please fill in all field"})
+        }
     
-  
+        if(password !== password2){
+            res.status(204).json({error:"password does not match"})
+    
+        }
+    
+        if(password < 6){
+           res.status(204).json({error:"password must not be less than six characters"})
+        }
+        
+    const newEmail = await Users.findOne({email : email })
+    
+        if (newEmail){
+            res.status(204).json({error:"Email already registered"})
+          } 
+    
+    const newUser = await Users.findOne({username : username})
+    
+        if(newUser){
+    
+            res.status(204).json({error:"Username already exists!"})
+    
+    
+        }  else {
+    const newUser = new Users({firstname, lastname , email , username ,  password , password2})
+            //Hash password
+            const  hashedPassword = await bcrypt.hash(newUser.password, 10)
+    
+            newUser.password = hashedPassword
+    
+            await newUser.save();
+            res.status(200).json({newUser})
+    
+        }
+    
+        }
+
+ const loginUsers = async  (req , res ) =>{
+    const {username , password} = req.body;
+
+    if(!username || !password){
+       res.status(400)
     }
-   })
-}
- }
 
-//    Login 
-const loginUsers = (req , res , next)  =>{
-        passport.authenticate('local', {
-            successRedirect:"/",
-            failureRedirect:"/login",
-            failureFlash:true
-        })
-        next();
+const savedUser =  await Users.findOne({username:username})
+        if(!savedUser){
+         res.status(404)
+        }
 
-}
+const doMatch =  await  bcrypt.compare(password, savedUser.password)
+            if(doMatch){
+               const token = jwt.sign({user_id:savedUser}, process.env.JWT_SECRET , {expiresIn : '1d'})
+               res.status(200).json({token, user:savedUser.username})
+            } else {
+                return res.status(401)
+            }
+           
+      
+       
+        }
 
-// Logout
-const logoutUsers = (req,res)=>{
-    req.logout();
-    res.redirect('/login');
-}
+
 
 
 // post 
@@ -133,4 +138,4 @@ const deletePostBlogs = async (req , res) =>{
 
 
 
-module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers , logoutUsers, deletePostBlogs}
+module.exports = {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs, registerUsers , loginUsers ,deletePostBlogs}
