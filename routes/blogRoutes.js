@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs , registerUsers , loginUsers , logoutUsers, deletePostBlogs} = require('../controller/blogController')
-const { ensureAuthenticated } = require('../config/auth')
+const {postBlogs , getPostBlogs, searchPostBlogs, updatePostBlogs , registerUsers , loginUsers ,  deletePostBlogs} = require('../controller/blogController')
+const { ensureAuthenticated } = require('../middleware/authorization')
 
 
 
@@ -15,7 +15,7 @@ router.post('/register', registerUsers);
 
 router.post('/login', loginUsers);
 
-router.get('/logout', logoutUsers);
+
 
 router.post('/postblogs', ensureAuthenticated, postBlogs);
 
