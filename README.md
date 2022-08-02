@@ -31,11 +31,6 @@ In your terminal, 'cd' to the directory where you want to develop the blog and d
 - npm install .
 In order to initiate the blog server on your local machine, do the following command (You need node.js to run the following command) $ node blog The blog should be running on your localhost at the 3000 port; go to http://localhost:3000 to view it. And it should look similar to the screenshot below.
 
-![][]
-
-
-
-![][]
 
 When successfully logged in, your navigation bar should have three new options appended to it...
 
