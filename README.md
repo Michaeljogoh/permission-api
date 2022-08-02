@@ -1,4 +1,4 @@
-## permission-api
+## Permission-API
 Permission-api is a simple and easy to use api. For those who wish to setup an operable blog in minutes, this is the project for you. The blog is built with Node.js, w/ Express.js, and Mongodb (with the mongoose driver) and jwt. 
 The instructions on how to consume the api is below
 
