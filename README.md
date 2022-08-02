@@ -12,6 +12,9 @@ Current verison: 0.2.2
 - Easy Heroku integration.
 - Create, edit, and delete your posts.
 
+## Postman Documentation
+
+https://documenter.getpostman.com/view/21519072/Uze3SjLN/
 
 ## Heroku Link
 
